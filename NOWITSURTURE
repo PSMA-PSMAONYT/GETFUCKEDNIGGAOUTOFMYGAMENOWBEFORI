@@ -1,0 +1,40 @@
+-- ClientScript (StarterPlayerScripts)
+local P=game:GetService("Players")
+local L=P.LocalPlayer
+local R=game:GetService("ReplicatedStorage")
+local M=R:WaitForChild("MoneyGiveEvent")
+local S=Instance.new
+local G=L:WaitForChild("PlayerGui")
+
+local SG=S("ScreenGui",G)
+SG.Name="MG"
+
+local IB=S("TextBox",SG)
+IB.Size=UDim2.new(0,200,0,50)
+IB.Position=UDim2.new(0.5,-100,0.4,0)
+IB.PlaceholderText="Enter Player Name"
+
+local SB=S("TextButton",SG)
+SB.Size=UDim2.new(0,200,0,50)
+SB.Position=UDim2.new(0.5,-100,0.5,0)
+SB.Text="Give Money"
+
+local FL=S("TextLabel",SG)
+FL.Size=UDim2.new(0,400,0,50)
+FL.Position=UDim2.new(0.5,-200,0.6,0)
+FL.TextColor3=Color3.fromRGB(255,0,0)
+
+SB.MouseButton1Click:Connect(function()
+  local T=P:FindFirstChild(IB.Text)
+  FL.Text=T and "Processing..." or "Player not found!"
+  if T then M:FireServer(T) end
+end)
+
+-- ServerScript (ServerScriptService)
+local M=ReplicatedStorage:WaitForChild("MoneyGiveEvent")
+
+M.OnServerEvent:Connect(function(_,T)
+  if T and T.leaderstats and T.leaderstats.Money then
+    T.leaderstats.Money.Value+=100
+  end
+end)
